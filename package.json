@@ -1,0 +1,12 @@
+{ "name": "jss"
+, "version": "0.1.0"
+, "author": { "name": "Jason Smith"
+            , "email": "jhs@couchone.com" }
+, "description": "Javascript JSON stream filtering and formatting"
+, "homepage": "http://github.com/jhs/jss"
+, "repository": { "type": "git"
+                , "url": "git://github.com/jhs/jss" }
+, "engines": [ "node" ]
+, "main": "jss"
+, "bin": {"jss": "./cli.js"}
+}
