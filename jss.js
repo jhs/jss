@@ -56,7 +56,7 @@ Stream.prototype.pump = function() {
 
   self.in.setEncoding('utf8');
   self.in.on('data', function on_data(chunk) {
-    chunk.split(/\n/).forEach(function(line, a, lines) {
+    chunk.split(/\r?\n/).forEach(function(line, a, lines) {
       if(a === 0) {
         line = unterminated + line;
         unterminated = "";
