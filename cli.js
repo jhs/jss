@@ -28,7 +28,7 @@ if(expression) {
 
   format = function(obj) {
     var result = getter.apply(obj, [obj, tab_separate, require, require('util')]);
-    if(false && typeof result === "object")
+    if(typeof result === "object")
       result = JSON.stringify(result);
     return "" + result;
   }
