@@ -20,15 +20,15 @@ if(!predicate) {
 }
 
 if(expression) {
-  var getter = new Function('obj, tab', 'with (obj) { return (' + expression + ') }');
+  var getter = new Function('obj, tab, require, util', 'with (obj) { return (' + expression + ') }');
 
   function tab_separate() {
     return Array.prototype.slice.apply(arguments).join("\t");
   }
 
   format = function(obj) {
-    var result = getter.apply(obj, [obj, tab_separate]);
-    if(typeof result === "object")
+    var result = getter.apply(obj, [obj, tab_separate, require, require('util')]);
+    if(false && typeof result === "object")
       result = JSON.stringify(result);
     return "" + result;
   }
