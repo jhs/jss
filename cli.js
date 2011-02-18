@@ -10,9 +10,10 @@ var usage = 'jss <test predicate> [result expression]';
 var argv = require('optimist').usage(usage).argv
   , predicate = argv._[0]
   , expression = argv._[1]
-  , test = new Function('obj', 'with (obj) { return !!(' + predicate + ') }')
-  , format = function(obj) { return JSON.stringify(obj) }
   ;
+
+var test = new Function('obj', 'with (obj) { return (' + predicate + ') }');
+var format = function(obj) { return JSON.stringify(obj) };
 
 if(!predicate) {
   console.log(usage);
@@ -20,14 +21,14 @@ if(!predicate) {
 }
 
 if(expression) {
-  var getter = new Function('obj, tab, require, util', 'with (obj) { return (' + expression + ') }');
+  var getter = new Function('obj, $, tab, require, util', 'with (obj) { return (' + expression + ') }');
 
   function tab_separate() {
     return Array.prototype.slice.apply(arguments).join("\t");
   }
 
-  format = function(obj) {
-    var result = getter.apply(obj, [obj, tab_separate, require, require('util')]);
+  format = function(obj, test_result) {
+    var result = getter.apply(obj, [obj, test_result, tab_separate, require, require('util')]);
     if(typeof result === "object")
       result = JSON.stringify(result);
     return "" + result;
@@ -39,4 +40,10 @@ stream.test = test;
 stream.format = format;
 stream.in = process.openStdin();
 stream.out = process.stdout;
+
+; ['pre', 'suf', 'head', 'tail'].forEach(function(arg) {
+  if(argv[arg])
+    stream[arg] = argv[arg];
+})
+
 stream.pump();
