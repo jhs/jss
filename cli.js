@@ -21,14 +21,21 @@ if(!predicate) {
 }
 
 if(expression) {
-  var getter = new Function('obj, $, tab, require, util', 'with (obj) { return (' + expression + ') }');
+  var getter = new Function('obj, $, tab, kv, require, util', 'with (obj) { return (' + expression + ') }');
 
   function tab_separate() {
     return Array.prototype.slice.apply(arguments).join("\t");
   }
 
+  function keyval_line(key, val) {
+    if(typeof key !== 'string')
+      throw new Error("Bad key for keyval: " + key);
+
+    return JSON.stringify(key) + ":" + JSON.stringify(val);
+  }
+
   format = function(obj, test_result) {
-    var result = getter.apply(obj, [obj, test_result, tab_separate, require, require('util')]);
+    var result = getter.apply(obj, [obj, test_result, tab_separate, keyval_line, require, require('util')]);
     if(typeof result === "object")
       result = JSON.stringify(result);
     return "" + result;
