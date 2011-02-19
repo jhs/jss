@@ -40,24 +40,31 @@ function Stream () {
       self.emit('match', obj, result);
   })
 
+  function insert(type) {
+    var val = self[type];
+    if(val) {
+      if(typeof val === 'string')
+        self.out.write(val);
+      else if(typeof val === 'function')
+        self.out.write(val());
+      else
+        throw new Error("Unknown insertion: " + type);
+    }
+  }
+
   var match_count = 0;
   self.on('match', function on_match(obj, result) {
     if(match_count === 0)
-      self.out.write(self.head || '');
+      insert('head');
 
     match_count += 1;
 
     try {
       var output = self.format.apply(obj, [obj, result, self.state]);
       if(output) {
-        if(self.pre)
-          self.out.write(self.pre);
-
+        insert('pre');
         self.out.write(output);
-
-        if(self.suf)
-          self.out.write(self.suf);
-
+        insert('suf');
         self.out.write("\n");
       }
     } catch (e) {

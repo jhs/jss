@@ -8,7 +8,9 @@ var sys = require('sys')
   ;
 
 var usage = 'jss <test predicate> [result expression]';
-var argv = require('optimist').usage(usage).argv
+var argv = require('optimist')
+                              .boolean(['bulk_docs', 'bulk-docs'])
+                              .argv
   , predicate = argv._[0]
   , expression = argv._[1]
   ;
@@ -57,6 +59,16 @@ if(argv.state) {
 
   var state_init = new Function('require, util, load', 'return (' + argv.state + ')');
   stream.state = state_init(require, util, json_from_file);
+}
+
+if(argv.bulk_docs || argv['bulk-docs']) {
+  argv.head = '{"docs":\n';
+  argv.tail = ']}';
+
+  stream.pre = function() {
+    stream.pre = function() { return ", " };
+    return "[ ";
+  }
 }
 
 ; ['pre', 'suf', 'head', 'tail'].forEach(function(arg) {
