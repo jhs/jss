@@ -50,13 +50,13 @@ stream.in = process.openStdin();
 stream.out = process.stdout;
 
 if(argv.state) {
-  function load_state_from_json(filename) {
+  function json_from_file(filename) {
     var data = require('fs').readFileSync(filename).toString('utf8');
-    stream.state = JSON.parse(data);
+    return JSON.parse(data);
   }
 
   var state_init = new Function('require, util, load', 'return (' + argv.state + ')');
-  stream.state = state_init(require, util);
+  stream.state = state_init(require, util, json_from_file);
 }
 
 ; ['pre', 'suf', 'head', 'tail'].forEach(function(arg) {
