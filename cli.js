@@ -4,6 +4,7 @@
 
 var sys = require('sys')
   , jss = require('jss')
+  , util = require('util')
   ;
 
 var usage = 'jss <test predicate> [result expression]';
@@ -12,7 +13,7 @@ var argv = require('optimist').usage(usage).argv
   , expression = argv._[1]
   ;
 
-var test = new Function('obj', 'with (obj) { return (' + predicate + ') }');
+var test = new Function('$, $s', 'with ($) { return (' + predicate + ') }');
 var format = function(obj) { return JSON.stringify(obj) };
 
 if(!predicate) {
@@ -21,7 +22,7 @@ if(!predicate) {
 }
 
 if(expression) {
-  var getter = new Function('obj, $, tab, kv, require, util', 'with (obj) { return (' + expression + ') }');
+  var getter = new Function('obj, $, $s, tab, kv, require, util', 'with (obj) { return (' + expression + ') }');
 
   function tab_separate() {
     return Array.prototype.slice.apply(arguments).join("\t");
@@ -34,8 +35,8 @@ if(expression) {
     return JSON.stringify(key) + ":" + JSON.stringify(val);
   }
 
-  format = function(obj, test_result) {
-    var result = getter.apply(obj, [obj, test_result, tab_separate, keyval_line, require, require('util')]);
+  format = function(obj, test_result, stream_state) {
+    var result = getter.apply(obj, [obj, test_result, stream_state, tab_separate, keyval_line, require, util]);
     if(typeof result === "object")
       result = JSON.stringify(result);
     return "" + result;
@@ -47,6 +48,16 @@ stream.test = test;
 stream.format = format;
 stream.in = process.openStdin();
 stream.out = process.stdout;
+
+if(argv.state) {
+  function load_state_from_json(filename) {
+    var data = require('fs').readFileSync(filename).toString('utf8');
+    stream.state = JSON.parse(data);
+  }
+
+  var state_init = new Function('require, util, load', 'return (' + argv.state + ')');
+  stream.state = state_init(require, util);
+}
 
 ; ['pre', 'suf', 'head', 'tail'].forEach(function(arg) {
   if(argv[arg])

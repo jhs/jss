@@ -18,6 +18,7 @@ function Stream () {
   self.head   = null;
   self.tail   = null;
   self.silent = null;
+  self.state = {};
 
   self.on('line', function on_line(line) {
     if(!self.test)
@@ -32,7 +33,7 @@ function Stream () {
 
   self.on('json', function on_json(obj) {
     var result = false;
-    try      { result = self.test.apply(obj, [obj]) }
+    try      { result = self.test.apply(obj, [obj, self.state]) }
     catch(e) { return; }
 
     if( !! (result) )
@@ -47,7 +48,7 @@ function Stream () {
     match_count += 1;
 
     try {
-      var output = self.format.apply(obj, [obj, result]);
+      var output = self.format.apply(obj, [obj, result, self.state]);
       if(output) {
         if(self.pre)
           self.out.write(self.pre);
