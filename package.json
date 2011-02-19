@@ -1,7 +1,7 @@
 { "name": "jss"
 , "description": "Javascript JSON stream filtering and formatting"
 , "version": "0.1.1"
-, "dependencies": { "optimist": "0.1.5"
+, "dependencies": { "optimist": ">=0.1.6"
                   }
 
 , "author": { "name": "Jason Smith"
