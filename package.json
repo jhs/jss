@@ -1,6 +1,6 @@
 { "name": "jss"
 , "description": "Javascript JSON stream filtering and formatting"
-, "version": "0.1.1"
+, "version": "0.1.2"
 , "dependencies": { "optimist": ">=0.1.6"
                   }
 
