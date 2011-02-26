@@ -2,8 +2,14 @@
 //
 
 var sys = require('sys')
+  , path = require('path')
   , events = require('events')
   ;
+
+var package_json = path.join(path.dirname(module.filename), 'package.json');
+package_json = require('fs').readFileSync(package_json);
+package_json = JSON.parse(package_json);
+exports.version = package_json.version;
 
 function Stream () {
   var self = this;
