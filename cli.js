@@ -18,6 +18,11 @@ var argv = require('optimist')
 var test = new Function('$, $s', 'with ($) { return (' + predicate + ') }');
 var format = function(obj) { return JSON.stringify(obj) };
 
+if(argv.version) {
+  console.log('jss v' + jss.version);
+  process.exit(0);
+}
+
 if(!predicate) {
   console.log(usage);
   process.exit(1);
