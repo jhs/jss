@@ -8,8 +8,8 @@ var sys = require('sys')
   ;
 
 var usage = 'jss <test predicate> [result expression]';
-var argv = require('optimist')
-                              .boolean(['bulk_docs', 'bulk-docs'])
+var argv = require('optimist').boolean(['bulk_docs', 'bulk-docs'])
+                              .boolean(['object'])
                               .argv
   , predicate = argv._[0]
   , expression = argv._[1]
@@ -73,6 +73,13 @@ if(argv.bulk_docs || argv['bulk-docs']) {
   stream.pre = function() {
     stream.pre = function() { return ", " };
     return "[ ";
+  }
+} else if(argv.object) {
+  argv.tail = '}';
+
+  stream.pre = function() {
+    stream.pre = function() { return ", " };
+    return '{ ';
   }
 }
 
