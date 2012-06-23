@@ -2,7 +2,7 @@
 // The jss command-line interface.
 //
 
-var sys = require('sys')
+var util = require('util')
   , jss = require('jss')
   , util = require('util')
   ;

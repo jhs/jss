@@ -1,7 +1,7 @@
 // The jss API
 //
 
-var sys = require('sys')
+var util = require('util')
   , path = require('path')
   , events = require('events')
   ;
@@ -80,7 +80,7 @@ function Stream () {
     }
   })
 }
-sys.inherits(Stream, events.EventEmitter);
+util.inherits(Stream, events.EventEmitter);
 
 Stream.prototype.pump = function() {
   var self = this
